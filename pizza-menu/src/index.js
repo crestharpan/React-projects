@@ -70,31 +70,25 @@ function Menu() {
   const hour = new Date().getFullYear();
 
   return (
-    <div className="menu">
+    <main className="menu">
       <h2>Here are our Pizzas</h2>
-      <Pizza
-        name="Pizza Spinaci"
-        ingredients="Tomato, Mozarella, Spinach, and Ricotta Cheese"
-        photo="/pizzas/spinaci.jpg"
-        price={10}
-      />
-      <Pizza
-        name="Pizza Funghi"
-        ingredients="Tomato, Mozarella, Spinach, and Ricotta Cheese"
-        photo="/pizzas/funghi.jpg"
-        price={120}
-      />
-    </div>
+      <ul className="pizzas">
+        {pizzaData.map((el) => (
+          <Pizza pizzaObj={el} key={el.name} />
+        ))}
+      </ul>
+    </main>
   );
 }
 function Pizza(props) {
   return (
-    <div className="pizza">
-      <img alt="spinaciPizza" src={props.photo} />
-      <h3>{props.name}</h3>
-      <p>{props.ingredients}</p>
-      <span>{props.price}</span>
-    </div>
+    <li className="pizza">
+      <img alt="pizza" src={props.pizzaObj.photoName} />
+      <h3>{props.pizzaObj.name}</h3>
+      <p>{props.pizzaObj.ingredients}</p>
+      <span>{props.pizzaObj.price}</span>
+      <span>{props.pizzaObj.soldOut}</span>
+    </li>
   );
 }
 
