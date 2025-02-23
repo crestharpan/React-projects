@@ -68,26 +68,31 @@ function Header() {
 
 function Menu() {
   const hour = new Date().getFullYear();
+  const numPizza = pizzaData.length;
 
   return (
     <main className="menu">
       <h2>Here are our Pizzas</h2>
-      <ul className="pizzas">
-        {pizzaData.map((el) => (
-          <Pizza pizzaObj={el} key={el.name} />
-        ))}
-      </ul>
+      {numPizza > 0 ? (
+        <ul className="pizzas">
+          {pizzaData.map((el) => (
+            <Pizza pizzaObj={el} key={el.name} />
+          ))}
+        </ul>
+      ) : (
+        <p>We are still working on our menu. Please comeback later.</p>
+      )}
     </main>
   );
 }
-function Pizza(props) {
+function Pizza({ pizzaObj }) {
   return (
     <li className="pizza">
-      <img alt="pizza" src={props.pizzaObj.photoName} />
-      <h3>{props.pizzaObj.name}</h3>
-      <p>{props.pizzaObj.ingredients}</p>
-      <span>{props.pizzaObj.price}</span>
-      <span>{props.pizzaObj.soldOut}</span>
+      <img alt="pizza" src={pizzaObj.photoName} />
+      <h3>{pizzaObj.name}</h3>
+      <p>{pizzaObj.ingredients}</p>
+      <span>{pizzaObj.price}</span>
+      <span>{pizzaObj.soldOut}</span>
     </li>
   );
 }
@@ -99,13 +104,16 @@ function Footer() {
   const isOpen = hour >= openHour && hour <= closeHour;
   return (
     <footer className="footer">
-      {isOpen && (
-        <div className="order">
-          <p>we're open untill {closeHour}:00!!</p>
-          <button className="btn">Order</button>
-        </div>
-      )}
+      {isOpen ? <Order closeHour={closeHour} /> : <p>We are close</p>}
     </footer>
+  );
+}
+function Order({ closeHour }) {
+  return (
+    <div className="order">
+      <p>we're open untill {closeHour}:00!!</p>
+      <button className="btn">Order</button>
+    </div>
   );
 }
 
