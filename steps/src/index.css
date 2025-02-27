@@ -80,12 +80,13 @@ h3 {
   top: 16px;
   right: 16px;
   border: none;
-  background: none;
+  background: #7950f2;
   cursor: pointer;
-  font-size: 40px;
-  color: inherit;
+  font-size: 30px;
+  color: #fff;
+  border-radius: 6px;
 }
 
 .close:hover {
-  color: #7950f2;
+  color: #e7e7e7;
 }
