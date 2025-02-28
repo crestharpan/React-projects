@@ -13,18 +13,18 @@ export default function App() {
   const [buttonShow, setButtonShow] = useState('close');
 
   function hanldePrevious() {
-    if (step > 1) setStep(step - 1);
+    if (step > 1) setStep((s) => s - 1);
   }
   function handleNext() {
     //UDADATE THE STATE
-    if (step < 3) setStep(step + 1);
+    if (step < 3) setStep((s) => s + 1);
   }
   function remove() {
-    setIsOpen(!isOpen);
+    setIsOpen((is) => !is);
     setButtonShow((buttonShow) => (buttonShow === 'open' ? 'close' : 'open'));
   }
   return (
-    <div>
+    <>
       <button className="close" onClick={remove}>{`${buttonShow}`}</button>
       {isOpen && (
         <div className="steps">
@@ -52,6 +52,6 @@ export default function App() {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 }
