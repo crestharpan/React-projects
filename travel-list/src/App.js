@@ -1,4 +1,8 @@
 import { useState } from "react";
+import Logo from "./Logo";
+import Form from "./Form";
+import Stats from "./Stats";
+import PackingList from "./PackingList";
 
 export default function App() {
   const [items, setItems] = useState([]);
@@ -36,116 +40,6 @@ export default function App() {
   );
 }
 
-function Logo() {
-  return <h1>🌴Far away💼</h1>;
-}
-function Form({ onAddItem }) {
-  const [description, setDescription] = useState("");
-  const [quantity, setQuantity] = useState("1");
+//LOGO
 
-  function handleSubmit(e) {
-    e.preventDefault();
-    if (!description) return;
-    const newItem = { description, quantity, packed: false, id: Date.now() };
-    setDescription("");
-    setQuantity(1);
-    onAddItem(newItem);
-  }
-
-  return (
-    <form className="add-form" onSubmit={handleSubmit}>
-      <h3>What do you need for your Trip?</h3>
-      <select
-        value={quantity}
-        onChange={(e) => setQuantity(Number(e.target.value))}
-      >
-        {/*Intializing an empty array and returning the index*/}
-        {Array.from({ length: 20 }, (__dirname, index) => index + 1).map(
-          (num) => (
-            <option value={num} key={num}>
-              {num}
-            </option>
-          )
-        )}
-      </select>
-      <input
-        type="text"
-        placeholder="Enter the item"
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
-      ></input>
-      <button type="submit">Add</button>
-    </form>
-  );
-}
-function PackingList({ items, onDelete, onToggle, onClear }) {
-  const [sortBy, setSortBy] = useState("input");
-  let sortedItems;
-  if (sortBy === "input") sortedItems = items;
-  if (sortBy === "descriptions")
-    sortedItems = items
-      .slice()
-      .sort((a, b) => a.description.localeCompare(b.description));
-  if (sortBy === "packed")
-    sortedItems = items
-      .slice()
-      .sort((a, b) => Number(a.packed) - Number(b.packed));
-  return (
-    <div className="list">
-      <ul>
-        {sortedItems.map((currItem) => (
-          <Item
-            item={currItem}
-            key={currItem.id}
-            onDelete={onDelete}
-            onToggle={onToggle}
-          />
-        ))}
-      </ul>
-      <div className="actions">
-        <select
-          value={sortBy}
-          onChange={(e) => {
-            setSortBy(e.target.value);
-          }}
-        >
-          <option value="input">Sort by inpur order</option>
-          <option value="descriptions">Sort by descriptions</option>
-          <option value="packed">Sort by packed status</option>
-        </select>
-        <button onClick={onClear}>Clear list</button>
-      </div>
-    </div>
-  );
-}
-
-function Item({ item, onDelete, onToggle }) {
-  return (
-    <li>
-      <input
-        type="checkbox"
-        value={item.packed}
-        onChange={() => onToggle(item.id)}
-      />
-      <span style={item.packed ? { textDecoration: "line-through" } : {}}>
-        {item.quantity} {item.description}
-      </span>
-      <button onClick={() => onDelete(item.id)}>❌</button>
-    </li>
-  );
-}
-
-function Stats({ items }) {
-  const packedItems = items.filter((item) => item.packed === true);
-  const numPackedItems = packedItems.length;
-  const numItems = items.length;
-
-  return (
-    <footer className="stats">
-      <em>
-        You have {numItems} items on your list and you have already packed{" "}
-        {numPackedItems} items ({(numPackedItems / numItems) * 100}%)
-      </em>
-    </footer>
-  );
-}
+//FORM
