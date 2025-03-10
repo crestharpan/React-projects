@@ -39,7 +39,3 @@ export default function App() {
     </div>
   );
 }
-
-//LOGO
-
-//FORM
