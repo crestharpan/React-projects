@@ -5,6 +5,9 @@ export default function PackingList({ items, onDelete, onToggle, onClear }) {
   const [sortBy, setSortBy] = useState("input");
   let sortedItems;
   if (sortBy === "input") sortedItems = items;
+
+  //WE USE SLICE METHOD BECAUSE THE SORT METHOD WILL MUTATE THE ORIGINAL ARRAY
+  //THUS SLICE METHOD MAKES A COPY OF ORIGINAL ARRAY(NO-MUTATION)
   if (sortBy === "descriptions")
     sortedItems = items
       .slice()
