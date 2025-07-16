@@ -12,7 +12,7 @@ export default function App() {
   const [isOpen, setIsOpen] = useState(true);
   const [buttonShow, setButtonShow] = useState('close');
 
-  function hanldePrevious() {
+  function handlePrevious() {
     if (step > 1) setStep((s) => s - 1);
   }
   function handleNext() {
@@ -37,21 +37,31 @@ export default function App() {
             step-{`${step}`}:{messages[step - 1]}
           </p>
           <div className="buttons">
-            <button
-              style={{ backgroundColor: 'purple', color: '#fff' }}
-              onClick={hanldePrevious}
+            <Button
+              bgColor={'purple'}
+              textColor={'#fff'}
+              onClick={handlePrevious}
             >
-              Previous
-            </button>
-            <button
-              style={{ backgroundColor: 'purple', color: '#fff' }}
-              onClick={handleNext}
-            >
-              Next
-            </button>
+              <span>👈</span> Previous
+            </Button>
+
+            <Button bgColor="purple" textColor="#fff" onClick={handleNext}>
+              Next <span>👉</span>
+            </Button>
           </div>
         </div>
       )}
     </>
+  );
+}
+
+function Button({ bgColor, textColor, onClick, children }) {
+  return (
+    <button
+      style={{ backgroundColor: bgColor, color: textColor }}
+      onClick={onClick}
+    >
+      {children}
+    </button>
   );
 }
