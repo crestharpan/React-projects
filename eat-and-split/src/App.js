@@ -31,9 +31,13 @@ function Button({ children, onClick }) {
 
 export default function App() {
   const [showAddFriend, setShowAddFriend] = useState(false);
+  const [showSplitForm, setShowSplitForm] = useState(false);
 
   function toggleShowAddFriendForm() {
     setShowAddFriend(!showAddFriend);
+  }
+  function toggleSplitBill() {
+    setShowSplitForm(!showSplitForm);
   }
   return (
     <div className="app">
@@ -44,7 +48,7 @@ export default function App() {
           {showAddFriend ? "close" : "Add Friend"}
         </Button>
       </div>
-      <FormSplitBill />
+      <FormSplitBill toggleSplitBill={toggleSplitBill} />
     </div>
   );
 }
@@ -59,7 +63,7 @@ function FriendList() {
     </ul>
   );
 }
-function Friend({ friend }) {
+function Friend({ friend, toggleSplitBill }) {
   return (
     <li>
       <img src={friend.image} alt={friend.name} />
@@ -70,10 +74,10 @@ function Friend({ friend }) {
         )}`}</p>
       )}
       {friend.balance > 0 && (
-        <p className="green">{`your friend owe you $${friend.balance}`}</p>
+        <p className="green">{`your friend owes you ${friend.balance}`}</p>
       )}
       {friend.balance === 0 && <p>{`you and ${friend.name} are even`}</p>}
-      <Button>Select</Button>
+      <Button onClick={toggleSplitBill}>Select</Button>
     </li>
   );
 }
