@@ -1,4 +1,6 @@
 import { useState } from "react";
+import propTypes from "prop-types";
+import PropTypes from "prop-types";
 
 const containerStyle = {
   display: "flex",
@@ -11,12 +13,23 @@ const starContainerStyle = {
   gap: "0px",
 };
 
+StarRating.propTypes = {
+  maxRating: PropTypes.number,
+  defaultRating: PropTypes.number,
+  color: PropTypes.string,
+  size: PropTypes.number,
+  message: propTypes.array,
+  className: propTypes.string,
+  setRating: propTypes.func,
+};
+
 export default function StarRating({
   maxRating = 5,
   color = "#fcc419",
   size = 35,
   message = [],
   defaultRating = 0,
+  className = "",
 }) {
   const [rating, setRating] = useState(defaultRating);
   const [tempRating, setTempRating] = useState(0);
@@ -43,6 +56,7 @@ export default function StarRating({
             full={tempRating ? tempRating >= i + 1 : rating >= i + 1}
             color={color}
             size={size}
+            className={className}
           />
         ))}
       </div>
@@ -56,7 +70,15 @@ export default function StarRating({
   );
 }
 
-function Star({ onClick, full, onMouseEnter, onMouseLeave, size, color }) {
+function Star({
+  onClick,
+  full,
+  onMouseEnter,
+  onMouseLeave,
+  size,
+  color,
+  className,
+}) {
   const starStyle = {
     width: `${size}px`,
     height: `${size}px`,
@@ -73,6 +95,7 @@ function Star({ onClick, full, onMouseEnter, onMouseLeave, size, color }) {
       onClick={onClick}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
+      className={className}
     >
       {full ? (
         <svg
