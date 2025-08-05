@@ -55,11 +55,15 @@ const average = (arr) => {
 };
 export default function App() {
   const [movies, setMovies] = useState([]);
-  const [watched, setWatched] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [query, setQuery] = useState("");
   const [selectedMovieID, setSelectedMovieId] = useState(null);
+  // const [watched, setWatched] = useState([]);
+  const [watched, setWatched] = useState(function () {
+    const storedValue = localStorage.getItem("watched");
+    return JSON.parse(storedValue); //WAS STORED IN STRING IN LOCAL STORAGE SO CONVERTING OT OBJECT
+  });
 
   //FUNCTION TO HANDLE THE MOVIE THAT IS SELECTED
   function handleSelect(id) {
@@ -73,11 +77,20 @@ export default function App() {
 
   function handleAddMovie(movie) {
     setWatched([...watched, movie]);
+    // localStorage.setItem("watched", JSON.stringify([...watched, movie]));
   }
 
   function removeMovie(id) {
     setWatched((watched) => watched.filter((movie) => movie.imdbID !== id));
   }
+
+  //STORING THE ITEMS IN THE LOCAL STORAGE
+  useEffect(
+    function () {
+      localStorage.setItem("watched", JSON.stringify(watched));
+    },
+    [watched]
+  );
 
   useEffect(
     function () {
