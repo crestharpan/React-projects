@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import StarRating from "./starRating";
+import { useMovies } from "./useMovies";
 
 const tempMovieData = [
   {
@@ -54,16 +55,15 @@ const average = (arr) => {
   return arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
 };
 export default function App() {
-  const [movies, setMovies] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
   const [query, setQuery] = useState("");
   const [selectedMovieID, setSelectedMovieId] = useState(null);
-  // const [watched, setWatched] = useState([]);
   const [watched, setWatched] = useState(function () {
-    const storedValue = localStorage.getItem("watched");
-    return JSON.parse(storedValue); //WAS STORED IN STRING IN LOCAL STORAGE SO CONVERTING OT OBJECT
+    const storedData = localStorage.getItem("watched");
+    return storedData ? JSON.parse(storedData) : [];
   });
+
+  //CALLING THE CUSTOME HOOKS AND DESTRUCTURING THE RETURNED OBJECT
+  const { movies, errorMessage, isLoading } = useMovies(query);
 
   //FUNCTION TO HANDLE THE MOVIE THAT IS SELECTED
   function handleSelect(id) {
@@ -90,51 +90,6 @@ export default function App() {
       localStorage.setItem("watched", JSON.stringify(watched));
     },
     [watched]
-  );
-
-  useEffect(
-    function () {
-      const controller = new AbortController();
-
-      async function fetchingData() {
-        try {
-          setIsLoading(true);
-          setErrorMessage("");
-
-          const res = await fetch(
-            `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`,
-            { signal: controller.signal }
-          );
-          if (!res.ok)
-            throw new Error("Something wrong while fetching the movies");
-
-          const data = await res.json();
-
-          if (data.Response === "False") throw new Error(`${data.Error}`);
-
-          setMovies(data.Search);
-          setErrorMessage("");
-        } catch (err) {
-          if (err.name !== "AbortError") {
-            setErrorMessage(err.message);
-          }
-        } finally {
-          setIsLoading(false);
-        }
-      }
-      if (query.length < 3) {
-        setMovies([]);
-        setErrorMessage("");
-        return;
-      }
-
-      fetchingData();
-
-      return function () {
-        controller.abort();
-      };
-    },
-    [query]
   );
 
   return (
@@ -206,6 +161,25 @@ function Logo() {
 }
 
 function SearchBox({ query, setQuery }) {
+  const inputEl = useRef(null);
+
+  useEffect(
+    function () {
+      function callback(e) {
+        if (document.activeElement === inputEl.current) return;
+        if (e.code === "Space") {
+          setQuery(" ");
+          inputEl.current.focus();
+        }
+      }
+
+      document.addEventListener("keydown", callback);
+      return () => {
+        document.removeEventListener("keydown", callback);
+      };
+    },
+    [setQuery]
+  );
   return (
     <input
       className="search"
@@ -213,6 +187,7 @@ function SearchBox({ query, setQuery }) {
       placeholder="Search movies..."
       value={query}
       onChange={(e) => setQuery(e.target.value)}
+      ref={inputEl}
     />
   );
 }
@@ -396,6 +371,7 @@ function MovieDetails({
 }
 
 function MovieWatchedSummary({ watched }) {
+  console.log(watched);
   const avgImdbRating = average(watched.map((movie) => movie.rating));
   const avgUserRating = average(watched.map((movie) => movie.userRating));
   const avgRuntime = average(watched.map((movie) => movie.runtime));
