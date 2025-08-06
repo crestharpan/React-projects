@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import StarRating from "./starRating";
 import { useMovies } from "./useMovies";
+import { useLocalStorageState } from "./useLoacalStorageState";
 
 const tempMovieData = [
   {
@@ -57,13 +58,10 @@ const average = (arr) => {
 export default function App() {
   const [query, setQuery] = useState("");
   const [selectedMovieID, setSelectedMovieId] = useState(null);
-  const [watched, setWatched] = useState(function () {
-    const storedData = localStorage.getItem("watched");
-    return storedData ? JSON.parse(storedData) : [];
-  });
 
   //CALLING THE CUSTOME HOOKS AND DESTRUCTURING THE RETURNED OBJECT
   const { movies, errorMessage, isLoading } = useMovies(query);
+  const [watched, setWatched] = useLocalStorageState([], "watched");
 
   //FUNCTION TO HANDLE THE MOVIE THAT IS SELECTED
   function handleSelect(id) {
@@ -83,14 +81,6 @@ export default function App() {
   function removeMovie(id) {
     setWatched((watched) => watched.filter((movie) => movie.imdbID !== id));
   }
-
-  //STORING THE ITEMS IN THE LOCAL STORAGE
-  useEffect(
-    function () {
-      localStorage.setItem("watched", JSON.stringify(watched));
-    },
-    [watched]
-  );
 
   return (
     <>
