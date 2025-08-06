@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import StarRating from "./starRating";
 import { useMovies } from "./useMovies";
 import { useLocalStorageState } from "./useLoacalStorageState";
+import { useKey } from "./useKey";
 
 const tempMovieData = [
   {
@@ -153,23 +154,13 @@ function Logo() {
 function SearchBox({ query, setQuery }) {
   const inputEl = useRef(null);
 
-  useEffect(
-    function () {
-      function callback(e) {
-        if (document.activeElement === inputEl.current) return;
-        if (e.code === "Space") {
-          setQuery(" ");
-          inputEl.current.focus();
-        }
-      }
+  //CUSTOM HOOK TO FOCUS ON SEARCBOX ON SPACE KEY PRESSED DOWN
+  useKey("space", function () {
+    if (document.activeElement === inputEl.current) return;
+    setQuery(" ");
+    inputEl.current.focus();
+  });
 
-      document.addEventListener("keydown", callback);
-      return () => {
-        document.removeEventListener("keydown", callback);
-      };
-    },
-    [setQuery]
-  );
   return (
     <input
       className="search"
@@ -293,20 +284,8 @@ function MovieDetails({
     [movie.Title]
   );
 
-  useEffect(
-    function () {
-      function callback(e) {
-        if (e.code === "Escape") {
-          onCloseMovie();
-        }
-      }
-      document.addEventListener("keydown", callback);
-      return function () {
-        document.removeEventListener("keydown", callback);
-      };
-    },
-    [onCloseMovie]
-  );
+  //CUSTOME HOOK TO CLOSE THE MOVIE ON ESCAPE KEY DOWN
+  useKey("Escape", onCloseMovie);
 
   return (
     <div className="details">
